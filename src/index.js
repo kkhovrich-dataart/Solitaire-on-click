@@ -122,6 +122,7 @@
    var $fnd = d.querySelector('#fnd');
    var $tab = d.querySelector('#tab');
    var $autoWin = d.querySelector('#auto-win');
+   var $congrats = d.querySelector('#congrats');
 
    // other global vars
    var clock = 0;
@@ -567,10 +568,6 @@
          // prevent default
          event.preventDefault();
 
-         // start timer
-         if ( $timer.dataset.action !== 'start' ) {
-            timer('start');
-         }
 
          // if timestamp matches then return false
          var time = event.timeStamp; // get timestamp
@@ -963,68 +960,7 @@
          console.log('Table reset');
       }
 
-   // timer funcion
-      function timer(action) {
-         // declare timer vars
-         var minutes = 0;
-         var seconds = 0;
-         var gameplay = d.body.dataset.gameplay;
-         // set timer attribute
-         $timer.dataset.action = action;
-         // switch case
-         switch (action) {
-            // start timer
-            case 'start' :
-               console.log('Starting Timer...');
-               // looping function
-               clock = setInterval(function() {
-                  // increment
-                  time++;
-                  // parse minutes and seconds
-                  minutes = parseInt(time / 60, 10);
-                  seconds = parseInt(time % 60, 10);
-                  minutes = minutes < 10 ? "0" + minutes : minutes;
-                  seconds = seconds < 10 ? "0" + seconds : seconds;
-                  // output to display
-                  $timerSpan.textContent = minutes + ':' + seconds;
-                  // if 10 seconds has passed decrement score by 2 pts
-                  if ( time % 10 === 0 ) updateScore(-2);
-               }, 1000);
-               // add dataset to body
-               d.body.dataset.gameplay = 'active';
-               // unbind click to play button
-               if ( gameplay === 'paused')
-               $playPause.removeEventListener('click', playTimer);
-               // bind click to pause button
-               $playPause.addEventListener('click', pauseTimer = function(){
-                  timer('pause');
-               });
-            break;
-            // pause timer
-            case 'pause' :
-               console.log('Pausing Timer...');
-               clearInterval(clock);
-               d.body.dataset.gameplay = 'paused';
-               // unbind click to pause button
-               if ( gameplay === 'active')
-               $playPause.removeEventListener('click', pauseTimer);
-               // bind click tp play button
-               $playPause.addEventListener('click', playTimer = function(){
-                  timer('start');
-               });
-            break;
-            // stop timer
-            case 'stop' :
-               console.log('Stoping Timer...');
-               clearInterval(clock);
-               d.body.dataset.gameplay = 'over';
-            break;
-            // default
-            default : break;
-         }
-         console.log(time);
-         return;
-      }
+
 
    // move counter
       function countMove(moves) {
@@ -1066,13 +1002,6 @@
          return score;
       }
 
-   // calculate bonus points
-      function getBonus() {
-         if (time >= 30) bonus = parseInt(700000 / time);
-         console.log(bonus);
-         return bonus;
-      }
-
    // check for win
       function checkForWin(table) {
          // if all foundation piles are full
@@ -1082,12 +1011,10 @@
                table['clubs'].length
                === 52 ) {
             console.log('Game Has Been Won');
-            // stop timer
-            timer('stop');
-            // bonus points for time
-            updateScore(getBonus());
+
             // throw confetti
-            throwConfetti();
+            // throwConfetti();
+            $congrats.style.display = 'block';
             // return true
             return true;
          }
@@ -1138,10 +1065,6 @@
          render(table);
          // animate cards to foundation piles
          autoWinAnimation(table);
-         // stop timer
-         timer('stop');
-         // bonus points for time
-         updateScore(getBonus());
       }
 
    // auto win animation
@@ -1194,7 +1117,10 @@
                i--;
                if (i !== 0) animation_loop();
                // at the end lets celebrate!
-               else throwConfetti();
+               else {
+                  throwConfetti();
+                  $congrats.style.display = 'block';
+               };
             }, 100);
          };
          // run animation loop

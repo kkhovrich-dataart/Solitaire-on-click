@@ -11,22 +11,15 @@
         <div class="container">
 
             <div id="score">
-               <div class="timer">
-                  <button id="play-pause">
-                     <i id="play">Play</i>
-                     <i id="pause">Pause</i>
-                  </button>
-                  <label>Timer:</label>
-                  <span>00:00</span>
-               </div>
                <div class="move-count" data-moves="0">
-                  <label>Moves:</label>
+                  <label>Moves: </label>
                   <span>0</span>
                </div>
                <div class="score" data-score="0">
                   <label>Score:</label>
                   <span>0</span>
                </div>
+               <button class="new-game" onClick="window.location.reload();">New game</button>
             </div>
         
             <div id="table">
@@ -70,6 +63,10 @@
          <button id="auto-win">Auto Win</button>
         
          <canvas id="confetti"></canvas>
+         <div id="congrats">
+            <div>Congrats! You won!</div>
+            <button class="new-game" onClick="window.location.reload();">New game</button>
+         </div>
         
          <ul class="template">
             <li data-rank="2">
